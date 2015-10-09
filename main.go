@@ -1,10 +1,16 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"os"
 	"time"
 
+	"golang.org/x/net/context"
+
 	"github.com/codegangsta/cli"
+	"github.com/heimathafen/hafen/rpc/grpc/search"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -57,8 +63,45 @@ func main() {
 // ```
 func SearchAction(c *cli.Context) {
 	print("Searching for ", c.Args()[0], "..")
-	time.Sleep(300 * time.Millisecond)
-	println("", c.Args()[0], "not found.")
+	conn, err := grpc.Dial("localhost:30100", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf(
+			`Unable to connect to heimathafen server.
+      Reason: %s
+
+      Please try again later or report an issue to https://github.com/heimathafen/hafen/issues
+      `,
+			err,
+		)
+	}
+
+	// Ignoring +cancel CancelFunc+ here.
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+
+	searchService := search.NewSearchClient(conn)
+	results, err := searchService.Call(ctx, &search.SearchRequest{
+		Query: c.Args()[0],
+	})
+	if err != nil {
+		log.Fatalf(
+			`Unable to make a search query.
+      Reason: %s
+
+      Please try again later or report an issue to https://github.com/heimathafen/hafen/issues
+      `,
+			err,
+		)
+	}
+
+	if len(results.Recipes) == 0 {
+		println(c.Args()[0], " not found.")
+		return
+	}
+
+	println("Done. Found:")
+	for _, recipe := range results.Recipes {
+		fmt.Printf("%+v\n", recipe)
+	}
 }
 
 // InfoAction is for fetching information from registry for a specified cli tool

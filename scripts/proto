@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+PROTO_PATH=/go/src
+COMPILE_DIR=/go/src/github.com/heimathafen/hafen
+
+compile() {
+  docker run \
+    --rm \
+    --volume $(pwd):$COMPILE_DIR \
+    --workdir $COMPILE_DIR \
+    pedge/proto3grpc \
+    protoc --proto_path=$PROTO_PATH:. --go_out=plugins=grpc:. $1/$2
+}
+
+compile ./proto/recipe recipe.proto
+compile ./rpc/grpc/search search.proto

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package recipe;
+
+// Recipe represents set of instructions and configuration for building and
+// installing specific tool to run seamlessly in docker container.
+message Recipe {
+  // name of the recipe, i.e.: +docker-compose+.
+  string name = 1;
+  // version of the recipe, i.e.: +0.1.0+.
+  string version = 2;
+
+  // git url of repo containing the recipe, i.e.:
+  // +https://github.com/heimathafen/library+.
+  string recipe_git_url = 3;
+  // git tree path of recipe's config inside of repo, i.e.:
+  // +/docker-compose/config.json+.
+  string recipe_config_path = 4;
+  // git tree path of recipe's build context, i.e.: +/docker-compose/build/+.
+  string recipe_build_path = 5;
+  // git tree path of recipe's run script installer, i.e.:
+  // +/docker-compose/run/+.
+  string recipe_run_path = 6;
+  // http url of recipe, i.e.:
+  // +https://github.com/heimathafen/library/tree/master/docker-compose/+.
+  string recipe_http_url = 7;
+
+  // git url of repo containing the tool this recipe is for itself, i.e.:
+  // +https://github.com/docker/compose+.
+  string git_url = 8;
+}
