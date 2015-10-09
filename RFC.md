@@ -10,7 +10,8 @@ hafen install docker-compose
 
 Then the service finds information about `docker-compose` in registry, such as:
 
-- Where and how to download the code (`git` url for now);
+- Where and how to download the code (`git` url for now) (which sits in
+  `{https://github.com/heimathafen/library; /docker-compose/config.json}`);
 
 And the service builds the docker image for `docker-compose` of last released
 version by using `docker` context at `{https://github.com/heimathafen/library;
