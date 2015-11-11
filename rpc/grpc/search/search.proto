@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "github.com/heimathafen/hafen/proto/recipe/recipe.proto";
+
+package search;
+
+// Search service is for searching for recipe, when the exact name of recipe is
+// unknown.
+service Search {
+  rpc Call(SearchRequest) returns (Results) {}
+}
+
+// SearchRequest represents a search query.
+message SearchRequest {
+  // full-text query to search for a recipe
+  string query = 1;
+}
+
+// Results represent recipes matching the query.
+message Results {
+  // list of recipes matching the query
+  repeated recipe.Recipe recipes = 1;
+}
